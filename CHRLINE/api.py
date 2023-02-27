@@ -166,7 +166,10 @@ class API(TalkService, ShopService, LiffService, ChannelService, SquareService, 
                 pincode = self.checkAndGetValue(res, 4).encode()
             print(f"Enter Pincode: {pincode.decode()}")
             if e2ee:
-                e2eeInfo = self.checkLoginV2PinCode(verifier)['metadata']
+                returnData = self.checkLoginV2PinCode(verifier)
+                if not returnData:
+                    raise Exception("Pincode expired, try again")
+                e2eeInfo = returnData['metadata']
                 try:
                     self.decodeE2EEKeyV1(e2eeInfo, secret)
                 except:
@@ -216,7 +219,10 @@ class API(TalkService, ShopService, LiffService, ChannelService, SquareService, 
             if self.checkAndGetValue(res, 5, 'val_5') == 3:
                 print(f'need device confirm')
             print(f"Enter Pincode: {pincode.decode()}")
-            e2eeInfo = self.checkLoginV2PinCode(verifier)['metadata']
+            returnData = self.checkLoginV2PinCode(verifier)
+            if not returnData:
+                raise Exception("Pincode expired, try again")
+            e2eeInfo = returnData['metadata']
             try:
                 e2eeKeyInfo = self.decodeE2EEKeyV1(e2eeInfo, secret)
             except:
