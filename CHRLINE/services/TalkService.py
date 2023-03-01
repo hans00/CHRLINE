@@ -428,44 +428,8 @@ class TalkService(BaseService):
 
     def getContacts(self, mids):
         METHOD_NAME = "getContacts"
-        sqrd = [
-            128,
-            1,
-            0,
-            1,
-            0,
-            0,
-            0,
-            11,
-            103,
-            101,
-            116,
-            67,
-            111,
-            110,
-            116,
-            97,
-            99,
-            116,
-            115,
-            0,
-            0,
-            0,
-            0,
-            15,
-            0,
-            2,
-            11,
-            0,
-            0,
-            0,
-            len(mids),
-        ]
-        for mid in mids:
-            sqrd += [0, 0, 0, 33]
-            for value in mid:
-                sqrd.append(ord(value))
-        sqrd += [0]
+        params = [[15, 2, [11, mids]]]
+        sqrd = self.generateDummyProtocol(METHOD_NAME, params, 3)
         return self.postPackDataAndGetUnpackRespData(
             self.LINE_NORMAL_ENDPOINT, sqrd, readWith=f"TalkService.{METHOD_NAME}"
         )
